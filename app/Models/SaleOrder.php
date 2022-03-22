@@ -41,10 +41,14 @@ class SaleOrder extends Model
 
     public static function storeSv(Request $request, $saleOrderNumber)
     {
+        $paxId = DB::table('users')
+            ->where('pax_mobile','=',$request->input('pax_mobile'))
+            ->first();
+
         DB::table('sale_order')->insert([
             'sale_or_no'        => $saleOrderNumber,
             'txn_date'          => Carbon::now(),
-            'pax_id'            => Auth::id(),
+            'pax_id'            => $paxId->pax_id,
             'unit'              => 1,
             'unit_price'        => $request -> input('price'),
             'total_price'       => $request -> input('price'),
@@ -59,10 +63,11 @@ class SaleOrder extends Model
 
     public static function reload($old_order, $reload_amount, $saleOrderNumber)
     {
+
         DB::table('sale_order')->insert([
             'sale_or_no'        => $saleOrderNumber,
             'txn_date'          => Carbon::now(),
-            'pax_id'            => Auth::id(),
+            'pax_id'            => $old_order->pax_id,
             'src_stn_id'        => $old_order -> src_stn_id ?? null,
             'des_stn_id'        => $old_order -> des_stn_id ?? null,
             'ms_qr_no'          => $old_order -> ms_qr_no,
@@ -80,10 +85,14 @@ class SaleOrder extends Model
 
     public static function storeTp(Request $request, $saleOrderNumber)
     {
+        $paxId = DB::table('users')
+            ->where('pax_mobile','=',$request->input('pax_mobile'))
+            ->first();
+
         DB::table('sale_order')->insert([
             'sale_or_no'        => $saleOrderNumber,
             'txn_date'          => Carbon::now(),
-            'pax_id'            => Auth::id(),
+            'pax_id'            => $paxId->pax_id,
             'src_stn_id'        => $request -> input('source_id'),
             'des_stn_id'        => $request -> input('destination_id'),
             'unit'              => 1,

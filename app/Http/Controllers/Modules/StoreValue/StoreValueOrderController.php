@@ -47,12 +47,14 @@ class StoreValueOrderController extends Controller
         ]);
     }
 
-    public function canIssuePass()
+    public function canIssuePass($pax_mobile)
     {
+
         $api = new ApiController();
         $response = $api -> canIssuePass(
             env('PRODUCT_SV'),
-            env('PASS_SV')
+            env('PASS_SV'),
+            $pax_mobile
         );
 
         if ($response -> status == 'OK')

@@ -18,10 +18,12 @@ class TripPassOrderController extends Controller
             'source_id' => 'required|integer|min:1|max:12',
             'destination_id' => 'required|integer|min:1|max:12',
             'fare' => 'required',
+            'pax_mobile' => 'required'
         ]);
 
         $saleOrderNumber = OrderUtility::genSaleOrderNumber(
-            env('PASS_TP')
+            env('PASS_TP'),
+            $request->input('pax_mobile')
         );
 
         $saleOrder = new SaleOrder();
@@ -56,17 +58,18 @@ class TripPassOrderController extends Controller
 
         return response([
             'status' => true,
-            'message' => 'Tripe created successfully'
+            'message' => 'Trips created successfully'
         ]);
 
     }
 
-    public function canIssuePass()
+    public function canIssuePass($pax_mobile)
     {
         $api = new ApiController();
         $response = $api->canIssuePassTP(
             env('PRODUCT_TP'),
-            env('PASS_TP')
+            env('PASS_TP'),
+            $pax_mobile
         );
 
         if ($response->status == 'OK') {

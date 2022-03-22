@@ -41,18 +41,19 @@ class StoreValueReloadController extends Controller
     {
 
         $old_order = DB::table('sale_order')
+            ->join('users','users.pax_id','=','sale_order.pax_id')
             ->where('sale_or_no', '=', $request->input('order_id'))
             ->first();
 
-        $SaleOrderNumber = OrderUtility::genSaleOrderNumber($old_order->pass_id);
+        $SaleOrderNumber = OrderUtility::genSaleOrderNumber($old_order->pass_id, $old_order->pax_mobile);
 
         SaleOrder::reload(
             $old_order,
             $request->input('reloadAmount'),
-            $SaleOrderNumber,
+            $SaleOrderNumber
         );
 
-        response([
+        return response([
             'status' => true,
             'order_id' => $SaleOrderNumber
         ]);

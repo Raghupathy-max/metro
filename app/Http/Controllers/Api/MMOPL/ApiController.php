@@ -79,6 +79,9 @@ class ApiController extends Controller
 
     public function genStoreValuePass($data)
     {
+        $pax_details = DB::table('users')
+            ->where('pax_id','=',$data->pax_id)
+            ->first();
         $response = Http::withHeaders(['Authorization' => $this->auth])
             ->withBody('{
                 "data": {
@@ -89,9 +92,9 @@ class ApiController extends Controller
                     "qrType"                    : "' . $data->product_id . '",
                     "operationTypeId"           : "' . $this->op_type_id_issue . '",
                     "operatorId"                : "' . $this->operator_id . '",
-                    "name"                      : "' . Auth::user()->pax_name . '",
-                    "email"                     : "' . Auth::user()->pax_email . '",
-                    "mobile"                    : "' . Auth::user()->pax_mobile . '",
+                    "name"                      : "' . $pax_details->pax_name . '",
+                    "email"                     : "' . $pax_details->pax_email . '",
+                    "mobile"                    : "' . $pax_details->pax_mobile . '",
                     "activationTime"            : "' . Carbon::now() . '",
                     "operatorTransactionId"     : "' . $data->sale_or_no . '"
                 },
@@ -119,15 +122,19 @@ class ApiController extends Controller
 
     public function genTrip($data)
     {
+        $pax_details = DB::table('users')
+            ->where('pax_id','=',$data->pax_id)
+            ->first();
+
         $response = Http::withHeaders(['Authorization' => $this->auth])
             ->withBody('{
              "data": {
                     "tokenType"             :   "' . $data->total_price . '",
                     "operationTypeId"       :   "' . $this->op_type_id_issue . '",
                     "operatorId"            :   "' . $this->operator_id . '",
-                    "name"                  :   "' . Auth::user()->pax_name . '",
-                    "email"                 :   "' . Auth::user()->pax_email . '",
-                    "mobile"                :   "' . Auth::user()->pax_mobile . '",
+                    "name"                  :   "' . $pax_details->pax_name . '",
+                    "email"                 :   "' . $pax_details->pax_email . '",
+                    "mobile"                :   "' . $pax_details->pax_mobile . '",
                     "activationTime"        :   "' . Carbon::now() . '",
                     "masterTxnId"           :   "' . $data->ms_qr_no . '",
                     "qrType"                :   "' . $data->product_id . '",
@@ -183,6 +190,9 @@ class ApiController extends Controller
 
     public function reloadStoreValuePass($order)
     {
+        $pax_details = DB::table('users')
+            ->where('pax_id','=',$order->pax_id)
+            ->first();
         $response = Http::withHeaders(['Authorization' => $this->auth])
             ->withBody('{
                 "data": {
@@ -190,9 +200,9 @@ class ApiController extends Controller
                     "tokenType"             : "' . $order->pass_id . '",
                     "operationTypeId"       : "' . $this->op_type_id_reload . '",
                     "operatorId"            : "' . $this->operator_id . '",
-                    "name"                  : "' . Auth::user()->pax_name . '",
-                    "email"                 : "' . Auth::user()->pax_email . '",
-                    "mobile"                : "' . Auth::user()->pax_mobile . '",
+                    "name"                  : "' . $pax_details->pax_name . '",
+                    "email"                 : "' . $pax_details->pax_email . '",
+                    "mobile"                : "' . $pax_details->pax_mobile . '",
                     "trips"                 : 45,
                     "activationTime"        : "' . Carbon::now() . '",
                     "operatorTransactionId" : "' . $order->sale_or_no . '",
@@ -212,6 +222,9 @@ class ApiController extends Controller
 
     public function reloadTripPass($order)
     {
+        $pax_details = DB::table('users')
+            ->where('pax_id','=',$order->pax_id)
+            ->first();
         $response = Http::withHeaders(['Authorization' => $this->auth])
             ->withBody('{
               "data": {
@@ -223,9 +236,9 @@ class ApiController extends Controller
                 "qrType"                : "' . $order->product_id . '",
                 "operationTypeId"       : "' . $this->op_type_id_reload . '",
                 "operatorId"            : "' . $this->operator_id . '",
-                "name"                  : "' . Auth::user()->pax_name . '",
-                "email"                 : "' . Auth::user()->pax_email . '",
-                "mobile"                : "' . Auth::user()->pax_mobile . '",
+                "name"                  : "' . $pax_details->pax_name . '",
+                "email"                 : "' . $pax_details->pax_email . '",
+                "mobile"                : "' . $pax_details->pax_mobile . '",
                 "trips"                 : 45,
                 "activationTime"        : "' . Carbon::now() . '",
                 "operatorTransactionId" : "' . $order->sale_or_no . '",
@@ -246,6 +259,9 @@ class ApiController extends Controller
 
     public function genTripPass($data)
     {
+        $pax_details = DB::table('users')
+            ->where('pax_id','=',$data->pax_id)
+            ->first();
         $response = Http::withHeaders(['Authorization' => $this->auth])
             ->withBody('{
                     "data": {
@@ -257,9 +273,9 @@ class ApiController extends Controller
                         "source"                    : "' . $data->src_stn_id . '",
                         "destination"               : "' . $data->des_stn_id . '",
                         "operatorId"                : "' . $this->operator_id . '",
-                        "name"                      : "' . Auth::user()->pax_name . '",
-                        "email"                     : "' . Auth::user()->pax_email . '",
-                        "mobile"                    : "' . Auth::user()->pax_mobile . '",
+                        "name"                      : "' . $pax_details->pax_name . '",
+                        "email"                     : "' . $pax_details->pax_email . '",
+                        "mobile"                    : "' . $pax_details->pax_mobile . '",
                         "activationTime"            : "' . Carbon::now() . '",
                         "operatorTransactionId"     : "' . $data->sale_or_no . '"
                     },
@@ -367,13 +383,13 @@ class ApiController extends Controller
 
     }
 
-    public function canIssuePass($product_id, $pass_id)
+    public function canIssuePass($product_id, $pass_id,$pax_mobile)
     {
         $response = Http::withHeaders(['Authorization' => $this->auth])
             ->withBody('{
                 "data": {
                     "fare"          : "1100",
-                    "mobile"        : "' . Auth::user()->pax_mobile . '",
+                    "mobile"        : "' .$pax_mobile. '",
                     "operatorId"    : "' . $this->operator_id . '",
                     "qrType"        : "' . $product_id . '",
                     "supportType"   : "' . $this->media_type_id . '",
@@ -386,13 +402,13 @@ class ApiController extends Controller
 
     }
 
-    public function canIssuePassTP($product_id, $pass_id)
+    public function canIssuePassTP($product_id, $pass_id, $pax_mobile)
     {
         $response = Http::withHeaders(['Authorization' => $this->auth])
             ->withBody('{
                 "data": {
                     "fare"          : "1100",
-                    "mobile"        : "' . Auth::user()->pax_mobile . '",
+                    "mobile"        : "' . $pax_mobile . '",
                     "operatorId"    : "' . $this->operator_id . '",
                     "qrType"        : "' . $product_id . '",
                     "source": 1,

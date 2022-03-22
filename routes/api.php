@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Modules\GateRejection\GraController;
+use App\Http\Controllers\Modules\OrderDetailsController;
 use App\Http\Controllers\Modules\Processing\ProcessingController;
+use App\Http\Controllers\Modules\Refund\RefundController;
 use App\Http\Controllers\Modules\StoreValue\StoreValueDashboardController;
 use App\Http\Controllers\Modules\StoreValue\StoreValueOrderController;
 use App\Http\Controllers\Modules\StoreValue\StoreValueReloadController;
@@ -9,6 +12,10 @@ use App\Http\Controllers\Modules\Ticket\DashboardController;
 use App\Http\Controllers\Modules\Ticket\OrderController;
 use App\Http\Controllers\Modules\Ticket\TicketStatusController;
 use App\Http\Controllers\Modules\Ticket\TicketViewController;
+use App\Http\Controllers\Modules\TripPass\TripPassDashboardController;
+use App\Http\Controllers\Modules\TripPass\TripPassOrderController;
+use App\Http\Controllers\Modules\TripPass\TripPassReloadController;
+use App\Http\Controllers\Modules\TripPass\TripPassStatusController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -40,7 +47,7 @@ Route::get('user/login/{pax_mobile}', [UserController::class, 'login'])->name('l
     // Route::get('processing/failed/{order_id}', [ProcessingController::class, 'failed'])->name('processing.failed');
 
     // TICKET
-    Route::get('ticket/dashboard', [DashboardController::class, 'index'])->name('ticket.dashboard');
+    Route::get('ticket/dashboard/{id}', [DashboardController::class, 'index'])->name('ticket.dashboard');
     //Route::get('ticket/order', [OrderController::class, 'index'])->name('ticket.index');
    // Route::get('ticket/order/{source}/{destination}', [OrderController::class, 'indexRecent'])->name('ticket.recent');
     Route::get('ticket/status/{id}', [TicketStatusController::class, 'index'])->name('ticket.status');
@@ -51,25 +58,25 @@ Route::get('user/login/{pax_mobile}', [UserController::class, 'login'])->name('l
 
 
     // STORE VALUE
-    Route::get('sv/dashboard/{$id}', [StoreValueDashboardController::class, 'index'])->name('sv.dashboard');
-    Route::get('sv/canIssuePass', [StoreValueOrderController::class, 'canIssuePass'])->name('sv.canIssuePass');
-    Route::get('sv/order', [StoreValueOrderController::class, 'index'])->name('sv.order');
+    Route::get('sv/dashboard/{id}', [StoreValueDashboardController::class, 'index'])->name('sv.dashboard');
+    Route::get('sv/canIssuePass/{pax_mobile}', [StoreValueOrderController::class, 'canIssuePass'])->name('sv.canIssuePass');
+  //  Route::get('sv/order', [StoreValueOrderController::class, 'index'])->name('sv.order');
     Route::post('sv/create', [StoreValueOrderController::class, 'create'])->name('sv.create');
     Route::get('sv/trip/{order_id}', [StoreValueOrderController::class, 'issueTrip'])->name('sv.issueTrip');
     Route::get('sv/status/{master_id}', [StoreValueStatusController::class, 'index'])->name('sv.status');
     Route::get('sv/reload/status/{order_id}', [StoreValueReloadController::class, 'status'])->name('sv.reload.status');
-    Route::get('sv/reload/{order_id}', [StoreValueReloadController::class, 'index'])->name('sv.reload.index');
+  //  Route::get('sv/reload/{order_id}', [StoreValueReloadController::class, 'index'])->name('sv.reload.index');
     Route::post('sv/reload', [StoreValueReloadController::class, 'reload'])->name('sv.reload');
 
     // TRIP PASS VALUE
-    Route::get('tp/dashboard', [TripPassDashboardController::class, 'index'])->name('tp.dashboard');
-    Route::get('tp/canIssuePass', [TripPassOrderController::class, 'canIssuePass'])->name('tp.canIssuePass');
-    Route::get('tp/order', [TripPassOrderController::class, 'index'])->name('tp.order');
+    Route::get('tp/dashboard/{id}', [TripPassDashboardController::class, 'index'])->name('tp.dashboard');
+    Route::get('tp/canIssuePass/{pax_mobile}', [TripPassOrderController::class, 'canIssuePass'])->name('tp.canIssuePass');
+   // Route::get('tp/order', [TripPassOrderController::class, 'index'])->name('tp.order');
     Route::post('tp/create', [TripPassOrderController::class, 'create'])->name('tp.create');
     Route::get('tp/trip/{order_id}', [TripPassOrderController::class, 'issueTrip'])->name('tp.issueTrip');
     Route::get('tp/status/{master_id}', [TripPassStatusController::class, 'index'])->name('tp.status');
     Route::get('tp/reload/status/{order_id}', [TripPassReloadController::class, 'status'])->name('tp.reload.status');
-    Route::get('tp/reload/{order_id}', [TripPassReloadController::class, 'index'])->name('tp.reload.index');
+  //  Route::get('tp/reload/{order_id}', [TripPassReloadController::class, 'index'])->name('tp.reload.index');
     Route::post('tp/reload', [TripPassReloadController::class, 'reload'])->name('tp.reload');
 
     // GRA
