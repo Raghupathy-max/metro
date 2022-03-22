@@ -3,6 +3,8 @@
 use App\Http\Controllers\Modules\Processing\ProcessingController;
 use App\Http\Controllers\Modules\StoreValue\StoreValueDashboardController;
 use App\Http\Controllers\Modules\StoreValue\StoreValueOrderController;
+use App\Http\Controllers\Modules\StoreValue\StoreValueReloadController;
+use App\Http\Controllers\Modules\StoreValue\StoreValueStatusController;
 use App\Http\Controllers\Modules\Ticket\DashboardController;
 use App\Http\Controllers\Modules\Ticket\OrderController;
 use App\Http\Controllers\Modules\Ticket\TicketStatusController;
@@ -49,7 +51,7 @@ Route::get('user/login/{pax_mobile}', [UserController::class, 'login'])->name('l
 
 
     // STORE VALUE
-    Route::get('sv/dashboard', [StoreValueDashboardController::class, 'index'])->name('sv.dashboard');
+    Route::get('sv/dashboard/{$id}', [StoreValueDashboardController::class, 'index'])->name('sv.dashboard');
     Route::get('sv/canIssuePass', [StoreValueOrderController::class, 'canIssuePass'])->name('sv.canIssuePass');
     Route::get('sv/order', [StoreValueOrderController::class, 'index'])->name('sv.order');
     Route::post('sv/create', [StoreValueOrderController::class, 'create'])->name('sv.create');

@@ -9,10 +9,10 @@ use Inertia\Inertia;
 
 class StoreValueDashboardController extends Controller
 {
-    public function index()
+    public function index($id)
     {
         $pass = DB::table('sale_order')
-            ->where('pax_id', '=', Auth::id())
+            ->where('pax_id', '=', $id)
             ->where('sale_or_status', '=', env('ORDER_TICKET_GENERATED'))
             ->where('product_id', '=', env('PRODUCT_SV'))
             ->orderBy('txn_date', 'desc')

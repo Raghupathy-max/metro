@@ -17,9 +17,10 @@ class StoreValueOrderController extends Controller
     {
         $request->validate([
             'price' => 'required|integer|min:100|max:3000|multiple_of:100',
+            'pax_mobile' => 'required'
         ]);
 
-        $saleOrderNumber = OrderUtility::genSaleOrderNumber($request->input('pass_id'));
+        $saleOrderNumber = OrderUtility::genSaleOrderNumber($request->input('pass_id'), $request ->input('pax_mobile'));
         SaleOrder::storeSv($request, $saleOrderNumber);
 
         return response([
