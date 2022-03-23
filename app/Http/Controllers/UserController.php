@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -23,8 +22,6 @@ class UserController extends Controller
             'pax_mobile' => $request->input('pax_mobile'),
             'is_verified' => $request->input('is_verified'),
         ]);
-
-        Auth::login($user);
 
         return response([
             'status' => true,
@@ -51,15 +48,12 @@ class UserController extends Controller
 
     public function login($pax_mobile)
     {
-
-
-        $_user = User::where('pax_mobile', '=', $pax_mobile)->first();
-        Auth::login($_user);
+        $user = User::where('pax_mobile', '=', $pax_mobile)->first();
 
         return response([
             'status' => true,
             'message' => 'user login successfully',
-            'user'=> Auth::user()
+            'user'=> $user
         ]);
 
     }
