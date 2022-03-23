@@ -31,7 +31,7 @@ class SaleOrder extends Model
             'unit_price'        => $request -> input('fare'),
             'total_price'       => $request -> input('quantity') * $request -> input('fare'),
             'media_type_id'     => env('MEDIA_TYPE_ID_MOBILE'),
-            'product_id'        => $request->input('pass_id') === env('PASS_SJT') ? env('PRODUCT_SJT') :  env('PRODUCT_RJT'),
+            'product_id'        => $request->input('pass_id') == env('PASS_SJT') ? env('PRODUCT_SJT') :  env('PRODUCT_RJT'),
             'op_type_id'        => env('ISSUE'),
             'pass_id'           => $request->input('pass_id'),
             'pg_id'             => env('PHONE_PE_PG'),

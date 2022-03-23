@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\MMOPL\FareController;
 use App\Http\Controllers\Modules\GateRejection\GraController;
 use App\Http\Controllers\Modules\OrderDetailsController;
 use App\Http\Controllers\Modules\Processing\ProcessingController;
@@ -87,8 +88,22 @@ Route::get('user/login/{pax_mobile}', [UserController::class, 'login'])->name('l
     Route::get('refund/{order_id}', [RefundController::class, 'info'])->name('refund.info');
     Route::get('refund/ticket/{order_id}', [RefundController::class, 'apply'])->name('refund');
 
+    //Station
+    Route::get('get/station',[\App\Http\Controllers\Modules\Station\StationController::class,'getStation'])->name('station');
+
 
 
 Route::get('order/{order_id}', [OrderDetailsController::class, 'index'])->name('details-order');
 
+
+Route::post('/get/fare', [FareController::class, 'getFare'])->name('fare');
+
+
+// SETTLEMENT
+Route::middleware(['basic_auth'])->group(function () {
+    Route::post('get/settlement/issue', [SettlementController::class, 'getIssueUnsettledData'])->name('settlement.issue');
+    Route::post('get/settlement/refund', [SettlementController::class, 'getRefundUnsettledData'])->name('settlement.refund');
+    Route::post('set/settlement/issue', [SettlementController::class, 'setIssueUnsettledData'])->name('settlement.post.issue');
+    Route::post('set/settlement/refund', [SettlementController::class, 'setRefundUnsettledData'])->name('settlement.post.refund');
+});
 
