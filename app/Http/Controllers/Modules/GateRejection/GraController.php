@@ -30,7 +30,7 @@ class GraController extends Controller
     public function apply(Request $request)
     {
       $data=  $request->getContent();
-        print_r($data);
+        print_r($data->data);
 
         $penaltyAmount = 0;
 
