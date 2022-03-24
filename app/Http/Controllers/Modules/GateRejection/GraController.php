@@ -31,7 +31,7 @@ class GraController extends Controller
     {
       $data=  json_decode($request->getContent());
 
-        dd($data->data->penalties);
+
 
         $penaltyAmount = 0;
 
@@ -45,12 +45,16 @@ class GraController extends Controller
             $penaltyAmount += $penalty -> amount;
         }
 
-        $saleOrderNumber = OrderUtility::genSaleOrderNumber($request->input('token_type'), $request->input('pax_mobile'));
+        $saleOrderNumber = OrderUtility::genSaleOrderNumber($data->data->tokenType, $data->pax_mobile);
+
+        $pax_details = DB::table('users')
+                ->where('pax_id','=',$data->pax_mobile)
+                ->first();
 
         DB::table('sale_order')->insert([
             'sale_or_no'        => $saleOrderNumber,
             'txn_date'          => Carbon::now(),
-            'pax_id'            => Auth::id(),
+            'pax_id'            => $pax_details->pax_id,
             'ms_qr_no'          => $request->input('masterTxnId'),
             'src_stn_id'        => $request->input('source') ?? 1,
             'des_stn_id'        => $request -> input('station_id'),
