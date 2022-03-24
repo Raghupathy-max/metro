@@ -29,7 +29,8 @@ class GraController extends Controller
 
     public function apply(Request $request)
     {
-      $data=  $request->getContent();
+      $data=  json_decode($request->getContent());
+
         print_r($data->data);
 
         $penaltyAmount = 0;
