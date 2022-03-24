@@ -59,6 +59,7 @@ class TripPassReloadController extends Controller
 
     public function reload(Request $request)
     {
+
         $old_order = DB::table('sale_order')
             ->join('users','users.pax_id','=','sale_order.pax_id')
             ->where('sale_or_no', '=', $request->input('order_id'))

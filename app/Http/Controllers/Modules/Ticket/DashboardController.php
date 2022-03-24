@@ -37,7 +37,7 @@ class DashboardController extends Controller
 
     }
 
-    private function getRecentOrders()
+    private function getRecentOrders($id)
     {
         return DB::table('sale_order as so')
             ->join('stations as s', 's.stn_id', 'so.src_stn_id')

@@ -12,7 +12,7 @@ class StationController extends Controller
         $station = DB::table('stations')
             ->get();
         return response([
-           'station' => $station
+           'stations' => $station
         ]);
     }
 }

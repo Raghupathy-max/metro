@@ -25,9 +25,12 @@ class StoreValueDashboardController extends Controller
             ->where('qr_status', '!=', env('COMPLETED'))
             ->where('qr_status', '!=', env('EXPIRED'))
             ->first();
+        $pax_details = DB::table('users')
+            ->where('pax_id','=',$id)
+            ->first();
 
-        return Inertia::render('Modules/StoreValue/Dashboard', [
-            'user' => Auth::user(),
+        return response([
+            'user' => $pax_details,
             'pass' => $pass,
             'trip' => $trip,
             'stations' => DB::table('stations')->get(['stn_id', 'stn_name'])

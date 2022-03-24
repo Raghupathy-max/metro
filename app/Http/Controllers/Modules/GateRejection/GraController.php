@@ -29,66 +29,44 @@ class GraController extends Controller
 
     public function apply(Request $request)
     {
-        $graInfo = json_decode(
-            json_encode(
-                $request -> input('penaltyInfo')
-            )
-        );
 
         $penaltyAmount = 0;
 
-        foreach ($graInfo -> penalties as $penalty)
+        foreach ($request->input('penalties') as $penalty)
         {
             $penaltyAmount += $penalty -> amount;
         }
 
-        foreach ($graInfo -> overTravelCharges as $penalty)
+        foreach ($request->input('overTravelCharges') as $penalty)
         {
             $penaltyAmount += $penalty -> amount;
         }
 
-        $saleOrderNumber = OrderUtility::genSaleOrderNumber($graInfo -> tokenType);
+        $saleOrderNumber = OrderUtility::genSaleOrderNumber($request->input('token_type'), $request->input('pax_mobile'));
 
         DB::table('sale_order')->insert([
             'sale_or_no'        => $saleOrderNumber,
             'txn_date'          => Carbon::now(),
             'pax_id'            => Auth::id(),
-            'ms_qr_no'          => $graInfo -> masterTxnId,
-            'src_stn_id'        => $graInfo -> source ?? 1,
+            'ms_qr_no'          => $request->input('masterTxnId'),
+            'src_stn_id'        => $request->input('source') ?? 1,
             'des_stn_id'        => $request -> input('station_id'),
             'unit'              => 1,
             'unit_price'        => $penaltyAmount,
             'total_price'       => $penaltyAmount,
             'media_type_id'     => env('MEDIA_TYPE_ID_MOBILE'),
-            'product_id'        => $graInfo -> qrType,
+            'product_id'        => $request->input('qrType'),
             'op_type_id'        => env('ORDER_GRA'),
-            'pass_id'           => $graInfo -> tokenType,
+            'pass_id'           => $request->input('tokenType'),
             'pg_id'             => env('PHONE_PE_PG'),
             'sale_or_status'    => env('ORDER_GRA'),
-            'ref_sl_qr'         => $graInfo -> refTxnId
+            'ref_sl_qr'         => $request->input('refTxnId')
         ]);
 
-        $order = DB::table('sale_order as so')
-            ->join('stations as s', 's.stn_id', '=', 'so.src_stn_id')
-            ->join('stations as d', 'd.stn_id', '=', 'so.des_stn_id')
-            ->where('sale_or_no', '=', $saleOrderNumber)
-            ->select(['so.*', 's.stn_name as source_name', 'd.stn_name as destination_name'])
-            ->first();
-
-        $api = new PhonePePaymentController();
-        $response = $api->pay($order);
-
-        return $response->success
-            ? response([
-                'status' => true,
-                'redirectUrl' => $response->data->redirectUrl,
-                'order_id' => $saleOrderNumber
-            ])
-            : response([
-                'status' => false,
-                'error' => $response,
-                'order_id' => $saleOrderNumber
-            ]);
+        return response([
+            'status' => true,
+            'order_id' => $saleOrderNumber
+        ]);
 
     }
 

@@ -71,6 +71,7 @@ class RefundController extends Controller
     public function apply($order_id)
     {
         $order = DB::table('sale_order')
+            ->join('users','users.pax_id','=','sale_order.pax_id')
             ->where('sale_or_no', '=', $order_id)
             ->first();
 
@@ -102,14 +103,14 @@ class RefundController extends Controller
     {
 
         // GENERATING REFUND ORDER
-        $refund_order_id = OrderUtility::genSaleOrderNumber($order->pass_id);
+        $refund_order_id = OrderUtility::genSaleOrderNumber($order->pass_id, $order->pax_mobile);
 
         // CREATING REFUND ORDER
         DB::table('refund_order')
             ->insert([
                 'ref_or_no' => $refund_order_id,
                 'sale_or_id' => $order->sale_or_id,
-                'pax_id' => Auth::id(),
+                'pax_id' => $order->pax_id,
                 'unit' => $order->unit,
                 'ref_amt' => $response->data->details->pass->refundAmount,
                 'ref_chr' => $response->data->details->pass->processingFee,
