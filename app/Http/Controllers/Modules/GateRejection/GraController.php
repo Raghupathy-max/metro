@@ -48,7 +48,7 @@ class GraController extends Controller
         $saleOrderNumber = OrderUtility::genSaleOrderNumber($data->data->tokenType, $data->pax_mobile);
 
         $pax_details = DB::table('users')
-                ->where('pax_id','=',$data->pax_mobile)
+                ->where('pax_mobile','=',$data->pax_mobile)
                 ->first();
 
         DB::table('sale_order')->insert([
@@ -62,9 +62,9 @@ class GraController extends Controller
             'unit_price'        => $penaltyAmount,
             'total_price'       => $penaltyAmount,
             'media_type_id'     => env('MEDIA_TYPE_ID_MOBILE'),
-            'product_id'        => $request->input('qrType'),
+            'product_id'        => $data->data->qrType,
             'op_type_id'        => env('ORDER_GRA'),
-            'pass_id'           => $request->input('tokenType'),
+            'pass_id'           => $data->data->tokenType,
             'pg_id'             => env('PHONE_PE_PG'),
             'sale_or_status'    => env('ORDER_GRA'),
             'ref_sl_qr'         => $request->input('refTxnId')
