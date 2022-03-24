@@ -31,7 +31,7 @@ class GraController extends Controller
     {
       $data=  json_decode($request->getContent());
 
-        print_r($data->data);
+        dd($data->data->penalties);
 
         $penaltyAmount = 0;
 
