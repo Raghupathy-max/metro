@@ -118,7 +118,7 @@ class RefundController extends Controller
                 'txn_date' => now()
             ]);
 
-        // REFUNDING PHONEPE
+     /*  // REFUNDING PHONEPE
         $phonepe = new PhonePeRefundController();
         $refundResponse = $phonepe->init($order, $refund_order_id, $response->data->details->pass->refundAmount);
 
@@ -135,7 +135,7 @@ class RefundController extends Controller
             ->where('sale_or_id', '=', $order->sale_or_id)
             ->update([
                 'pg_txn_no' => $refundResponse->data->providerReferenceId
-            ]);
+            ]);*/
 
         // REFUNDING MMOPL
         $api = new ApiController();
@@ -174,19 +174,20 @@ class RefundController extends Controller
     {
 
         $lastOrder = DB::table('sale_order')
+            ->join('users','users.pax_id','=','sale_order.pax_id')
             ->where('ms_qr_no', '=', $order->ms_qr_no)
             ->orderBy('txn_date', 'desc')
             ->first();
 
         // GENERATING REFUND ORDER
-        $refund_order_id = OrderUtility::genSaleOrderNumber($lastOrder->pass_id);
+        $refund_order_id = OrderUtility::genSaleOrderNumber($lastOrder->pass_id,$lastOrder->pax_mobile);
 
         // CREATING REFUND ORDER
         DB::table('refund_order')
             ->insert([
                 'ref_or_no' => $refund_order_id,
                 'sale_or_id' => $lastOrder->sale_or_id,
-                'pax_id' => Auth::id(),
+                'pax_id' => $lastOrder->pax_id,
                 'unit' => $lastOrder->unit,
                 'ref_amt' => $response->data->details->pass->refundAmount,
                 'ref_chr' => $response->data->details->pass->processingFee,
@@ -195,7 +196,7 @@ class RefundController extends Controller
             ]);
 
         // REFUNDING PHONEPE
-        $phonepe = new PhonePeRefundController();
+      /*  $phonepe = new PhonePeRefundController();
         $refundResponse = $phonepe->init($lastOrder, $refund_order_id, $response->data->details->pass->refundAmount);
 
         // IF PHONEPE REFUND FAILED
@@ -211,7 +212,7 @@ class RefundController extends Controller
             ->where('sale_or_id', '=', $lastOrder->sale_or_id)
             ->update([
                 'pg_txn_no' => $refundResponse->data->providerReferenceId
-            ]);
+            ]);*/
 
         // REFUNDING MMOPL
         $api = new ApiController();
@@ -255,15 +256,18 @@ class RefundController extends Controller
 
     private function tpRefund($order, $response)
     {
+        $pax_details = DB::table('users')
+                ->where('pax_id','=',$order->pax_id)
+                ->first();
         // GENERATING REFUND ORDER
-        $refund_order_id = OrderUtility::genSaleOrderNumber($order->pass_id);
+        $refund_order_id = OrderUtility::genSaleOrderNumber($order->pass_id,$pax_details->pax_mobile);
 
         // CREATING REFUND ORDER
         DB::table('refund_order')
             ->insert([
                 'ref_or_no' => $refund_order_id,
                 'sale_or_id' => $order->sale_or_id,
-                'pax_id' => Auth::id(),
+                'pax_id' => $order->pax_id,
                 'unit' => $order->unit,
                 'ref_amt' => $response->data->details->pass->refundAmount,
                 'ref_chr' => $response->data->details->pass->processingFee,
