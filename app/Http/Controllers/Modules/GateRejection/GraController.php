@@ -29,7 +29,7 @@ class GraController extends Controller
 
     public function apply(Request $request)
     {
-
+        print_r($request);
         $penaltyAmount = 0;
 
         foreach ($request->input('data')->penalties as $penalty)
