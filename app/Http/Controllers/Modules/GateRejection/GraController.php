@@ -32,12 +32,12 @@ class GraController extends Controller
 
         $penaltyAmount = 0;
 
-        foreach ($request->input('penalties') as $penalty)
+        foreach ($request->input('data')->penalties as $penalty)
         {
             $penaltyAmount += $penalty -> amount;
         }
 
-        foreach ($request->input('overTravelCharges') as $penalty)
+        foreach ($request->input('data')->overTravelCharges as $penalty)
         {
             $penaltyAmount += $penalty -> amount;
         }
